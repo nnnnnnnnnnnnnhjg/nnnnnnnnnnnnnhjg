@@ -8,7 +8,7 @@
 :root{
   --bg:#F1F4F3; --surface:#FFFFFF; --sunk:#E6ECEA; --ink:#15212A; --muted:#55646C; --line:#D5DDDA;
   --accent:#1A5871; --accent-ink:#FFFFFF; --accent-soft:#DCEAF0;
-  --vis:#F2E33B; --on-vis:#15212A; --tape:#C3CCD0;
+  --vis:#F2E33B; --vis-deep:#E3D22A; --on-vis:#15212A; --tape:#C3CCD0;
   --ok:#1C6F45; --ok-bg:#E1F1E8; --warn:#8A4F00; --warn-bg:#FAEED6; --bad:#A8281F; --bad-bg:#FAE3E0; --info:#1A5871; --info-bg:#E2EDF2;
   --scrim:rgba(10,18,22,.5);
   --shadow:0 1px 2px rgba(21,33,42,.06),0 10px 30px rgba(21,33,42,.12);
@@ -19,7 +19,7 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0D1316; --surface:#151F25; --sunk:#1C2830; --ink:#E4EBED; --muted:#98A6AD; --line:#2A3840;
   --accent:#7BBFD8; --accent-ink:#0D1316; --accent-soft:#17303C;
-  --vis:#E6D838; --on-vis:#15212A; --tape:#B7C0C4;
+  --vis:#E6D838; --vis-deep:#D3C52C; --on-vis:#15212A; --tape:#B7C0C4;
   --ok:#6BC995; --ok-bg:#15301F; --warn:#E8AD58; --warn-bg:#332610; --bad:#F09189; --bad-bg:#3A1917; --info:#7BBFD8; --info-bg:#152A36;
   --scrim:rgba(0,0,0,.6);
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.45);
@@ -27,7 +27,7 @@
 :root[data-theme="dark"]{
   --bg:#0D1316; --surface:#151F25; --sunk:#1C2830; --ink:#E4EBED; --muted:#98A6AD; --line:#2A3840;
   --accent:#7BBFD8; --accent-ink:#0D1316; --accent-soft:#17303C;
-  --vis:#E6D838; --on-vis:#15212A; --tape:#B7C0C4;
+  --vis:#E6D838; --vis-deep:#D3C52C; --on-vis:#15212A; --tape:#B7C0C4;
   --ok:#6BC995; --ok-bg:#15301F; --warn:#E8AD58; --warn-bg:#332610; --bad:#F09189; --bad-bg:#3A1917; --info:#7BBFD8; --info-bg:#152A36;
   --scrim:rgba(0,0,0,.6);
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.45);
@@ -48,6 +48,7 @@ a{color:var(--accent)}
 
 /* Header */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.top::before{content:"";display:block;height:7px;background:linear-gradient(var(--vis) 0 2px,var(--tape) 2px 5px,var(--vis) 5px 7px)}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;padding-block:12px 6px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
 .vest{width:30px;height:30px;border-radius:7px;background:var(--vis);position:relative;flex:none}
@@ -94,7 +95,32 @@ main{padding-block:22px 36px;display:flex;flex-direction:column;gap:30px}
 .time.vis{background:var(--vis);color:var(--on-vis)}
 .duty-main{min-width:0}
 .duty-s{font-size:13px;color:var(--muted)}
-@media (max-width:520px){.duty{grid-template-columns:auto minmax(0,1fr)}.duty-a{grid-column:1/-1}}
+@media (max-width:340px){.duty{grid-template-columns:auto minmax(0,1fr)}.duty-a{grid-column:1/-1}}
+
+/* Next-duty card: the one loud element, styled like a duty vest with reflective tape */
+.hero{background:var(--vis);color:var(--on-vis);border-radius:14px;padding:18px 18px 0;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.hero .eyebrow{margin:0;font:700 12px/1.2 var(--f-body);letter-spacing:.08em;text-transform:uppercase}
+.hero-when{margin:8px 0 0;font:800 28px/1.08 var(--f-display);font-stretch:78%;text-wrap:balance}
+.hero-what{margin:4px 0 0;font-size:16px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:4px 20px;margin:16px -18px 0;padding:10px 18px 12px;background:var(--vis-deep);border-top:3px solid var(--tape);font-size:13.5px;font-weight:700}
+
+/* Setup checklist */
+.onb{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.onb-h{padding:18px 18px 14px;display:flex;flex-direction:column;gap:8px}
+.onb-h h2{margin:0;font:700 22px/1.15 var(--f-display);font-stretch:84%;text-wrap:balance}
+.onb-h p{margin:0;color:var(--muted);max-width:60ch}
+.meter{height:8px;border-radius:4px;background:var(--sunk);overflow:hidden;margin-top:4px}
+.meter span{display:block;height:100%;background:var(--accent);border-radius:4px}
+.steps{list-style:none;margin:0;padding:0}
+.step{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:2px 12px;align-items:center;padding:12px 18px;border-top:1px solid var(--line)}
+.step-n{grid-row:1/span 2;width:30px;height:30px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font:700 13px/1 var(--f-body);color:var(--muted)}
+.step.done .step-n{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.step.next .step-n{border-color:var(--accent);color:var(--accent)}
+.step-t{font-weight:700;grid-column:2}
+.step.done .step-t{color:var(--muted)}
+.step-d{font-size:13px;color:var(--muted);grid-column:2}
+.step .btn{grid-column:3;grid-row:1/span 2}
+@media (max-width:480px){.step .btn{grid-column:2;grid-row:auto;justify-self:start;margin-top:6px}}
 
 /* Controls */
 .btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:700 14px/1.1 var(--f-body);padding:9px 14px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px}
@@ -682,10 +708,46 @@ function rulesBox(){
 }
 
 /* ---------- views ---------- */
+function totalSlots(){let n=0;for(const day of DAYS)for(const p of periodsOn(day))n+=areasFor(p).length;return n*(cfg().cycleWeeks===2?2:1)}
+function checklist(){
+  const c=cfg(), st=baseStats(), slots=totalSlots(), hasMe=!!(S.me&&S.teachers.has(S.me));
+  const steps=[
+    {done:c.periods.length>0,t:"Bell times and duty times",d:c.periods.length?`${c.periods.length} duty times, set from your bell times.`:"Add recess, lunch and your duty times.",href:"#setup",a:"Open Setup"},
+    {done:c.areas.length>0,t:"Duty areas",d:c.areas.length?c.areas.map(a=>a.name).join(", ")+".":"Where staff stand, like the Quad or Canteen.",href:"#setup",a:"Add areas"},
+    {done:S.teachers.size>0,t:"Staff list",d:S.teachers.size?`${S.teachers.size} staff added.`:"Paste everyone's names into Setup, one per line.",href:"#setup",a:"Add staff"},
+    {done:slots>0&&st.total>=slots,t:"Regular roster",d:st.total?`${st.total} of ${slots} duties filled.`:"Choose who's on each duty in the Roster tab.",href:"#roster",a:"Fill the roster",go:()=>{S.editRoster=true;}},
+    {done:hasMe,t:"Choose your name",d:"Use “I am” at the top so the page shows your own duties."}];
+  const n=steps.filter(s=>s.done).length, next=steps.findIndex(s=>!s.done);
+  return el("section",{class:"onb"},
+    el("div",{class:"onb-h"},el("h2",null,"Get your duty roster ready"),
+      el("p",null,`${n} of ${steps.length} done. When it's ready, share this page with staff as Editors from the Share menu.`),
+      el("div",{class:"meter",role:"progressbar","aria-label":"Setup progress","aria-valuemin":"0","aria-valuemax":String(steps.length),"aria-valuenow":String(n)},el("span",{style:"width:"+Math.round(n/steps.length*100)+"%"}))),
+    el("ol",{class:"steps"},steps.map((s,i)=>el("li",{class:"step"+(s.done?" done":i===next?" next":"")},
+      el("span",{class:"step-n","aria-hidden":"true"},s.done?"✓":String(i+1)),
+      el("span",{class:"step-t"},s.t,s.done?el("span",{class:"sr"}," (done)"):null),
+      el("span",{class:"step-d",text:s.d}),
+      !s.done&&s.href?el("a",{class:"btn sm"+(i===next?" primary":""),href:s.href,onclick:s.go||null},s.a):null))));
+}
+function relDay(d){const t=today();if(d===t)return "Today";if(d===addDays(t,1))return "Tomorrow";return fmtDate(d,true)}
+function hero(days){
+  const all=[]; for(const d of days) for(const a of dutiesOf(S.me,d)) all.push(a);
+  const noBreak=days.filter(d=>{const ds=dutiesOf(S.me,d);if(!ds.length)return false;const b=breakInfo(S.me,d,ds);return b&&b.status==="none";}).length;
+  const nx=all[0];
+  return el("section",{class:"hero","aria-label":"Your next duty"},
+    el("p",{class:"eyebrow"},nx?"Your next duty":"Your duties"),
+    nx?[el("p",{class:"hero-when",text:relDay(nx.date)+" · "+fmtRange(nx.start,nx.end)}),el("p",{class:"hero-what"},el("strong",{text:nx.period.name})," at the ",nx.area.name)]
+      :el("p",{class:"hero-when",text:"Nothing in the next two weeks"}),
+    el("div",{class:"hero-stats"},el("span",{text:`${all.length} ${all.length===1?"duty":"duties"} in the next 10 school days`}),
+      el("span",{text:noBreak?`${noBreak} ${noBreak===1?"day":"days"} without a 30-minute break`:"30-minute break safe every day"})));
+}
 function viewMine(){
-  if(!hasSetup()) return [setupNeeded()];
-  if(!S.me||!S.teachers.has(S.me)) return [pickMe(),rulesBox()];
+  if(!hasSetup()) return [isManager()?checklist():setupNeeded()];
+  const ready=S.teachers.size>0&&baseStats().total>0, hasMe=!!(S.me&&S.teachers.has(S.me));
+  const guide=isManager()&&(!ready||!hasMe)?checklist():null;
+  if(!hasMe) return [guide,S.teachers.size?pickMe():(guide?null:pickMe()),rulesBox()];
   const t=today(), c=cfg(), out=[];
+  if(guide) out.push(guide);
+  out.push(hero(nextSchoolDays(t,10)));
   const inc=S.swaps.filter(s=>s.status==="open"&&s.to===S.me&&s.date>=t).sort(byDate);
   if(inc.length) out.push(section("Requests for you",null,el("div",{class:"stack"},inc.map(s=>swapCard(s,"incoming")))));
   const days=nextSchoolDays(t,10);
@@ -710,7 +772,7 @@ function dayBlock(date){
     let sub=null;
     if(a.via){const fromId=(a.via.date===a.date&&a.via.cell===a.key)?a.via.from:a.via.to;sub="Swapped in from "+tname(fromId);}
     const act=pend?pill("warn",pend.status==="open"?"Request sent":"Waiting for approval")
-      :el("button",{class:"btn sm",type:"button",disabled:!canAct(),onclick:()=>{S.dialog={mode:"request",date:a.date,cell:a.key,kind:"cover",to:"",back:"",note:"",fresh:true};doRender();}},"Swap or give away");
+      :el("button",{class:"btn sm",type:"button","aria-label":`Swap or give away ${a.period.name} on ${fmtDate(a.date,true)}`,disabled:!canAct(),onclick:()=>{S.dialog={mode:"request",date:a.date,cell:a.key,kind:"cover",to:"",back:"",note:"",fresh:true};doRender();}},"Swap");
     return dutyRow(a,{action:act,sub});
   }));
 }
